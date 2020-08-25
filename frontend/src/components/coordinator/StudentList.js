@@ -24,81 +24,79 @@ class StudentList extends Component {
             student_branch: student.student_branch,
             guide_name: student.guide_name,
           };
-        })
+        }),
       );
+      console.log(this.downloadable);
       this.setState({});
     });
   }
 
   render() {
     return (
-      <div className="student-list mx-auto" style={{ width: "90%" }}>
+      <div className='student-list mx-auto' style={{ width: "90%" }}>
         <br />
         <div
-          className="p-2 px-3 text-center shadow-sm rounded font-weight-bold"
+          className='p-2 px-3 text-center shadow-sm rounded font-weight-bold'
           style={{
             color: "rgb(183, 32, 46)",
             fontSize: "1.1em",
             backgroundColor: "rgba(231, 231, 231, 0.459)",
-          }}
-        >
+          }}>
           Student List
         </div>
         <br />
-        <div class="table-responsive">
-          <table class="ui striped table">
-            <thead class="text-center">
-              <tr class="">
-                <th class="" scope="col">
+        <div class='table-responsive'>
+          <table class='ui striped table'>
+            <thead class='text-center'>
+              <tr class=''>
+                <th class='' scope='col'>
                   Roll Number
                 </th>
-                <th class="" scope="col">
+                <th class='' scope='col'>
                   Student Name
                 </th>
-                <th class="" scope="col">
+                <th class='' scope='col'>
                   Group Number
                 </th>
-                <th class="" scope="col">
+                <th class='' scope='col'>
                   Project Name
                 </th>
-                <th class="" scope="col">
+                <th class='' scope='col'>
                   Branch
                 </th>
-                <th class="" scope="col">
+                <th class='' scope='col'>
                   Guide Name
                 </th>
               </tr>
             </thead>
-            <tbody class="text-center">
+            <tbody class='text-center'>
               {this.students &&
                 this.students.map((student) => (
                   <tr
-                    class=""
+                    class=''
                     onClick={() =>
                       this.props.history.push(`/student/${student.student_id}`)
-                    }
-                  >
-                    <td class="">{student.student_roll_number}</td>
-                    <td class="">{student.student_name}</td>
-                    <td class="">{student.group_id || "-"}</td>
-                    <td class="">{student.project_name || "-"}</td>
-                    <td class="">{student.student_branch}</td>
-                    <td class="">{student.guide_name || "-"}</td>
+                    }>
+                    <td class=''>{student.student_roll_number}</td>
+                    <td class=''>{student.student_name}</td>
+                    <td class=''>{student.group_id || "-"}</td>
+                    <td class=''>{student.project_name || "-"}</td>
+                    <td class=''>{student.student_branch}</td>
+                    <td class=''>{student.guide_name || "-"}</td>
                   </tr>
                 ))}
             </tbody>
           </table>
         </div>
-        <div className="w-100 d-flex justify-content-center">
+        <div className='w-100 d-flex justify-content-center'>
           <div
-            className="btn btn-danger"
+            className='btn btn-danger'
             onClick={() =>
               saveCsv(this.downloadable[0], {
                 filename: "student-list.csv",
               })
-            }
-          >
-            <i className="fa fa-arrow-down mr-2" />
+            }>
+            <i className='fa fa-arrow-down mr-2' />
             Download
           </div>
         </div>

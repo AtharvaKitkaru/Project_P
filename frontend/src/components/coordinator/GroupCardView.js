@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 
 export class GroupCardView extends Component {
+  componentDidMount() {}
+
   render() {
     return (
       <div

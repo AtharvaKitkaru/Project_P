@@ -1,48 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./GroupList.scss";
-import ReactSearchBox from "react-search-box";
 import $ from "jquery";
 // import GroupDetails from "./GroupDetails";
 import GroupCardView from "./GroupCardView";
 import GroupListView from "./GroupListView";
+import saveCsv from "save-csv/save-csv.min.js";
+import axios from "../../axios";
+
 class GroupList extends React.Component {
-  data = [
-    {
-      key: "john",
-      value: "John Doe",
-    },
-    {
-      key: "jane",
-      value: "Jane Doe",
-    },
-    {
-      key: "mary",
-      value: "Mary Phillips",
-    },
-    {
-      key: "robert",
-      value: "Robert",
-    },
-    {
-      key: "karius",
-      value: "Karius",
-    },
-  ];
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       viewType: "card",
     };
+    // this.guides = [];
+    // this.downloadable = [];
   }
- 
+  componentDidMount() {
+    axios
+      .get("coordinatorGroup/")
+      .then(({ data }) => {
+        console.log(data);
+
+        this.setState({});
+      })
+      .catch((err) => console.log(err));
+  }
+
   render() {
     return (
       <div className='groups mx-auto' style={{ width: "90%" }}>
         <br />
-        {/* <div className = "container-fluid bg-primary">
-          abc
-        </div> */}
+
         <div
           className='p-2   text-center shadow-sm rounded font-weight-bold  mx-auto'
           style={{
@@ -54,23 +44,12 @@ class GroupList extends React.Component {
           Select Group
         </div>
         <div className='d-flex my-4 '>
-          <div className=' col-9 '>
-            <ReactSearchBox
-              placeholder='Search for groups here ...'
-              data={this.data}
-              autoFocus='true'
-              inputBoxBorderColor='#e1e6e2'
-              callback={(record) => console.log(record)}
-            />
-          </div>
           {/* toggle view */}
 
           <div
             className='col-2 d-flex h-100  bg-white shadow-sm rounded p-0   my-auto'
             style={{
               color: "rgb(183, 32, 46)",
-              // fontSize: "2.4vw",
-              // backgroundColor: "#ccc6c6",
             }}>
             <div
               id='card'

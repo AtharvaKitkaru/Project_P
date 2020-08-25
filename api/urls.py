@@ -8,9 +8,16 @@ urlpatterns = [
     # COORDINATOR
     path('coordinatorStudent/', views.coordinatorStudent),
     path('coordinatorStudentDetail/<int:id>/', views.coordinatorStudentDetail),
+
     path('coordinatorGroup/', views.coordinatorGroup),
+
     path('coordinatorGuide/', views.coordinatorGuide),
+    path('coordinatorGuideDetail/<int:id>/', views.coordinatorGuideDetail),
+
+
     path('coordinatorProject/', views.coordinatorProject),
+    path('coordinatorProjectDetail/<int:id>/', views.coordinatorProjectDetail),
+
     path('coordinatorAssignmentList/', views.coordinatorAssignmentList),
     path('coordinatorGroupSubmissionDetails/<int:assignmentId>/<int:teamId>/',
          views.coordinatorGroupSubmissionDetails),

@@ -1,5 +1,4 @@
 import React from "react";
-// import app from "../../Firebase";
 import axios from "../../axios";
 import $ from "jquery";
 
@@ -64,16 +63,7 @@ class FacultyForm extends React.Component {
       }
     });
   };
-  raiseAlert = (type, message) => {
-    $("#signup-feedback")
-      .html(() =>
-        $("<div>", {
-          class: `alert alert-${type}`,
-          role: "alert",
-        }).html(message),
-      )
-      .fadeIn();
-  };
+
   isFormValid = () => {
     return this.somaiyaEmail() &&
       this.securePassword() &&
@@ -85,43 +75,17 @@ class FacultyForm extends React.Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    $("#signup-feedback").fadeOut("fast", () => $(this).html(""));
-    // if (this.isFormValid())
-    // app.auth()
-    // 	.createUserWithEmailAndPassword(
-    // 		this.state.email,
-    // 		this.state.password
-    // 	)
-    // 	.then(({ user }) => {
-    // 		app.firestore()
-    // 			.collection("users")
-    // 			.doc(user.uid)
-    // 			.set({
-    // 				name: this.state.name,
-    // 				email: this.state.email,
+    axios.post("guideSignUp/", this.state).catch((err) => console.log(err));
 
-    // 				branch: this.state.branch,
-    // 				group: null,
-    // 				isLeader: false,
-    // 				emailVerified: false,
-    // 				userType: "student",
-    // 			})
-    // 			.then(() => {
-    // 				user.updateProfile({
-    // 					displayName: this.state.name,
-    // 				});
-    // 				user.sendEmailVerification().then(() => {
-    // 					this.raiseAlert(
-    // 						"success",
-    // 						"Verification email has been sent.<br />Please sign in after verification to complete registration process."
-    // 					);
-    // 				});
-    // 			})
-    // 			.catch((err) => this.raiseAlert("danger", err.message))
-    // 			.finally(() => app.auth().signOut());
-    // 	})
-    // 	.catch((err) => this.raiseAlert("danger", err.message));
-    // else this.raiseAlert("warning", "Form should not be tampered.");
+    let i;
+    for (
+      i = 0;
+      i < document.getElementById("guide-signup-form").elements.length;
+      i++
+    ) {
+      document.getElementById("guide-signup-form").elements[i].value = "";
+    }
+    
   };
   render() {
     return (
@@ -146,7 +110,10 @@ class FacultyForm extends React.Component {
             backgroundColor: "rgba(231, 231, 231, 0.459)",
           }}>
           <br />
-          <form autoComplete='off' onSubmit={this.handleSubmit}>
+          <form
+            id='guide-signup-form'
+            autoComplete='off'
+            onSubmit={this.handleSubmit}>
             <div className='form-group'>
               <label htmlFor='name'>Faculty Name</label>
               <input
@@ -246,6 +213,7 @@ class FacultyForm extends React.Component {
             <div className='form-group d-flex justify-content-between'>
               <button
                 className='btn btn-success'
+                type='submit'
                 disabled={!this.isFormValid()}>
                 Create faculty credentials
               </button>

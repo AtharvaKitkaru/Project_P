@@ -1,44 +1,48 @@
 import React from "react";
 import "./GuideDetailedList.scss";
-import { Redirect, Link } from "react-router-dom";
-import ReactSearchBox from "react-search-box";
+import { Link } from "react-router-dom";
+import axios from "../../axios";
+import saveCsv from "save-csv/save-csv.min.js";
 
 class GuideDetailedList extends React.Component {
-  data = [
-    {
-      key: "john",
-      value: "John Doe",
-    },
-    {
-      key: "jane",
-      value: "Jane Doe",
-    },
-    {
-      key: "mary",
-      value: "Mary Phillips",
-    },
-    {
-      key: "robert",
-      value: "Robert",
-    },
-    {
-      key: "karius",
-      value: "Karius",
-    },
-  ];
   constructor(props) {
     super(props);
-    this.state = { redirect: null };
+    this.guides = [];
+    this.downloadable = [];
   }
-  detailInfo = () => {
-    this.setState({ redirect: "/users/guide/:id" });
-    // window.location.href = "/users/guide/:id";
-  };
+  componentDidMount() {
+    axios.get("coordinatorGuide/").then(({ data }) => {
+      this.guides = data;
+      this.guides.forEach((guide) => {
+        if (guide.team_data.length != 0) {
+          guide.team_data.forEach((team) => {
+            this.downloadable.push({
+              guide_id: guide.guide_id,
+              guide_name: guide.guide_name,
+              guide_branch: guide.guide_branch,
+              team_id: team.team_id,
+              project_id: team.project_id,
+              project_title: team.project_title,
+            });
+          });
+        } else {
+          this.downloadable.push({
+            guide_id: guide.guide_id,
+            guide_name: guide.guide_name,
+            guide_branch: guide.guide_branch,
+            team_id: null,
+            project_id: null,
+            project_title: null,
+          });
+        }
+      });
+
+      console.log(this.downloadable);
+      this.setState({});
+    });
+  }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />;
-    }
     return (
       <div className='detailed-list mx-auto' style={{ width: "90%" }}>
         <br />
@@ -52,17 +56,8 @@ class GuideDetailedList extends React.Component {
           Guide Detailed List
         </div>
         <div className=' d-flex flex-md-row flex-column justify-content-between mx-auto mt-4 p-0'>
-          <div className='col-md-7 col-12 p-0 pl-2 my-1 '>
-            <ReactSearchBox
-              placeholder='Search for assignments here ...'
-              data={this.data}
-              autoFocus='true'
-              inputBoxBorderColor='#e1e6e2'
-              callback={(record) => console.log(record)}
-            />
-          </div>
           <div className='col-md-3 col-12 text-center p-0 my-1'>
-            <Link to='/users/guides'>
+            <Link to='/guides'>
               <div
                 className='back-button rounded-lg py-2 px-0 mx-auto'
                 style={{ marginBottom: "1em" }}>
@@ -79,54 +74,73 @@ class GuideDetailedList extends React.Component {
               style={{ fontFamily: `'Courier New', Courier, monospace` }}>
               <tr class=''>
                 <th class='' scope='col'>
-                  Faculty Name
+                  Id
+                </th>
+                <th class='' scope='col'>
+                  Name
+                </th>
+                <th class='' scope='col'>
+                  Branch
                 </th>
                 <th class='' scope='col'>
                   Group Number
                 </th>
+
                 <th class='' scope='col'>
                   Project Title
-                </th>
-                <th class='' scope='col'>
-                  Number of Groups
                 </th>
               </tr>
             </thead>
             <tbody class='text-center'>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>ABCD</td>
-                <td class=''>1</td>
-                <td class=''>Smart Cities</td>
-                <td class=''>2</td>
-              </tr>
-              <tr class=''>
-                <td class=''>ABCD</td>
-                <td class=''>2</td>
-                <td class=''>Smart India</td>
-                <td class=''>2</td>
-              </tr>
-              <tr class=''>
-                <td class=''>ABCD</td>
-                <td class=''>1</td>
-                <td class=''>Smart Cities</td>
-                <td class=''>2</td>
-              </tr>
-              <tr class=''>
-                <td class=''>ABCD</td>
-                <td class=''>2</td>
-                <td class=''>Smart India</td>
-                <td class=''>2</td>
-              </tr>
+              {this.guides.map((guide) => {
+                if (guide.team_data.length !== 0) {
+                  return guide.team_data.map((team) => {
+                    return (
+                      <tr
+                        class=''
+                        onClick={() =>
+                          this.props.history.push(`/guide/${guide.guide_id}`)
+                        }>
+                        <td class=''>{guide.guide_id}</td>
+                        <td class=''>{guide.guide_name}</td>
+                        <td class=''>{guide.guide_branch}</td>
+                        <td class=''>{team.team_id}</td>
+                        <td class=''>{team.project_title}||"-"</td>
+                      </tr>
+                    );
+                  });
+                } else {
+                  return (
+                    <tr
+                      class=''
+                      onClick={() =>
+                        this.props.history.push(`/guide/${guide.guide_id}`)
+                      }>
+                      <td class=''>{guide.guide_id}</td>
+                      <td class=''>{guide.guide_name}</td>
+                      <td class=''>{guide.guide_branch}</td>
+                      <td class=''>"-"</td>
+                      <td class=''>"-"</td>
+                    </tr>
+                  );
+                }
+              })}
             </tbody>
           </table>
           <hr />
         </div>
-        <Link to='/users/guide-detailed'>
-          <div className='mx-auto p-2 back-button text-center my-5 rounded-lg'>
-            <i className='fa fa-arrow-down mr-2' aria-hidden='true' />
+        <div className='w-100 d-flex justify-content-center'>
+          <div
+            className='btn btn-danger'
+            onClick={() =>
+              saveCsv(this.downloadable, {
+                filename: "guide-list.csv",
+              })
+            }>
+            <i className='fa fa-arrow-down mr-2' />
             Download
           </div>
-        </Link>
+        </div>
       </div>
     );
   }

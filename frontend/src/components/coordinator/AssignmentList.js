@@ -2,31 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import AssignmentCard from "./AssignmentCard";
 import "./AssignmentList.scss";
-import ReactSearchBox from "react-search-box";
-// docs : https://www.npmjs.com/package/react-search-box
+import axios from "../../axios";
 class AssignmentList extends React.Component {
-  data = [
-    {
-      key: "john",
-      value: "John Doe",
-    },
-    {
-      key: "jane",
-      value: "Jane Doe",
-    },
-    {
-      key: "mary",
-      value: "Mary Phillips",
-    },
-    {
-      key: "robert",
-      value: "Robert",
-    },
-    {
-      key: "karius",
-      value: "Karius",
-    },
-  ];
+  componentDidMount() {
+    axios
+      .get(`coordinatorAssignmentList/`)
+      .then(({ data }) => {
+        
+        this.assignments = data;
+        this.setState({});
+      })
+      .catch((err) => console.log(err));
+  }
   render() {
     return (
       <div className='assignment-list mx-auto ' style={{ width: "90%" }}>
@@ -42,15 +29,6 @@ class AssignmentList extends React.Component {
           Assignments
         </div>
         <div className=' d-flex  flex-md-row flex-column justify-content-between mx-auto mt-4 p-0'>
-          <div className='col-md-8 p-0  my-1  align-self-center'>
-            <ReactSearchBox
-              placeholder='Search for assignments here ...'
-              data={this.data}
-              autoFocus='true'
-              inputBoxBorderColor='#e1e6e2'
-              callback={(record) => console.log(record)}
-            />
-          </div>
           <div className='col-md-3  text-center align-self-center p-0 my-1'>
             <div class='dropdown '>
               <button
@@ -88,9 +66,10 @@ class AssignmentList extends React.Component {
         </div>
 
         <div className='p-2'>
-          <AssignmentCard />
-          <AssignmentCard />
-          <AssignmentCard />
+          {this.assignments &&
+            this.assignments.map((assignment) => {
+              return <AssignmentCard info={assignment} />;
+            })}
         </div>
       </div>
     );
